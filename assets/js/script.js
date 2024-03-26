@@ -69,6 +69,7 @@ function renderTaskList() {
         // const lane = $('task.laneID')
         lane?.append(cardelement)
     });
+    localStorage.setItem('tasks', JSON.stringify(taskList))
     $('.draggable').draggable({
         zIndex: 1
     });
@@ -97,6 +98,7 @@ function handleDeleteTask(event){
                 console.log(taskList)
             }
         })
+        localStorage.setItem('tasks', JSON.stringify(taskList))
         grandParent.remove(parent)
     } 
 }
