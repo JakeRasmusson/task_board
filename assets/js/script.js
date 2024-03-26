@@ -48,12 +48,6 @@ function createTaskCard(task) {
         <p class='card-p'> ${task.text} </p>
         <button type='button' class='delete-task'>Delete</button>
         </div>`
-
-    // const div2 = $(`<div>`,{
-    //     id: task.id,
-    //     class: 'card draggable card-content'
-    // }).html(`<p class='card-p'> ${task.text} </p>`)
-    // console.log(div2)
     return div
 
 
@@ -90,14 +84,14 @@ function handleDeleteTask(event){
         parent = target.parentNode
         grandParent = parent.parentNode
         id = grandParent.id
-        taskList.forEach(task => {
-            if (task.id == id) {
-                console.log(task.id)
-                taskList.pop(task)
+        for (let i = 0; i < taskList.length; i++) {
+            if (taskList[i].id == id) {
+                console.log(taskList[i].id)
                 console.log(id)
+                taskList.splice(i, 1)
                 console.log(taskList)
             }
-        })
+        }
         localStorage.setItem('tasks', JSON.stringify(taskList))
         grandParent.remove(parent)
     } 
