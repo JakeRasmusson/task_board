@@ -29,7 +29,6 @@ const starterTask = [
 // Retrieve tasks and nextId from localStorage
 let taskList = JSON.parse(localStorage.getItem("tasks")) || starterTask;
 let cardColumns = document.querySelectorAll('.card-lane');
-console.log(cardColumns)
 let nextId = JSON.parse(localStorage.getItem("nextId"));
 
 // Todo: create a function to generate a unique task id
@@ -87,12 +86,18 @@ function handleAddTask(event){
 function handleDeleteTask(event){
     const target = event.target
     if (target.className == 'delete-task') {
-        console.log(event)
-        console.log('phil')
         parent = target.parentNode
         grandParent = parent.parentNode
+        id = grandParent.id
+        taskList.forEach(task => {
+            if (task.id == id) {
+                console.log(task.id)
+                taskList.pop(task)
+                console.log(id)
+                console.log(taskList)
+            }
+        })
         grandParent.remove(parent)
-        // parent.innerHTML = ''
     } 
 }
 
@@ -114,10 +119,7 @@ $(document).ready(function () {
     renderTaskList()
     $('#btn1').on('click', handleAddTask)
 
-
     $('.card-lane').on('click', handleDeleteTask)
-
-
 
     $('.card-lane').droppable({
         accept: '.draggable',
