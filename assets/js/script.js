@@ -1,33 +1,6 @@
 
-
-const starterTask = [
-    {
-    title: 'Title 1',
-    text: 'test 1',
-    dueDate: '06/25/24',
-    id : generateTaskId(),
-    laneID: 'todo-cards'} ,
-
-    {
-    title: 'Title 2',
-    text: 'test 2',
-    dueDate: '01/11/24',
-    id : generateTaskId(),
-    laneID: 'in-progress-cards'} ,
-
-    {
-    title: 'Title 3',
-    text: 'test 3',
-    dueDate: '12/24/25',
-    id : generateTaskId(),
-    laneID: 'done-cards'},
-]
-
-
-
-
 // Retrieve tasks and nextId from localStorage
-let taskList = JSON.parse(localStorage.getItem("tasks")) || starterTask;
+let taskList = JSON.parse(localStorage.getItem("tasks")) || [];
 let cardColumns = document.querySelectorAll('.card-lane');
 let nextId = JSON.parse(localStorage.getItem("nextId"));
 let addTaskForm = document.getElementById('inputForm')
@@ -39,21 +12,26 @@ function generateTaskId() {
 
 // Todo: create a function to create a task card
 function createTaskCard(task) {
+    let late = 'Due in future'
     const div = document.createElement('div');
+    if (task.daysTillDue < 3 && task.daysTillDue > 0 ) {
+        div.classList.add('due-soon')
+        late = 'Due soon'
+    } else if (task.daysTillDue <= 0) {
+        div.classList.add('over-due')
+        late = 'Past due'
+    } 
     div.id = task.id
     div.classList.add('card', 'draggable')
     div.innerHTML = `
     <div class='card-content'>
     <h2 class='card-head'> ${task.title} </h2>
+    <h3>${late}</h3>
     <h3 class='card-due'>${task.dueDate}</h3>
     <p class='card-p'> ${task.text} </p>
     <button type='button' class='delete-task'>Delete</button>
     </div>`
-    if (task.daysTillDue < 3 && task.daysTillDue > 0 ) {
-        div.classList.add('due-soon')
-    } else if (task.daysTillDue <= 0) {
-        div.classList.add('over-due')
-    } 
+
     return div
 
     
@@ -138,9 +116,10 @@ function handleDeleteTask(event){
 
 // Todo: create a function to handle dropping a task into a new status lane
 function handleDrop(event, ui) {
+    console.log(ui)
     const cardEL = ui.draggable[0]
-    console.log(cardEL)
     const cardid = cardEL.id
+    console.log(event)
     const nextCol = event.target.id
     console.log(nextCol)
     const data = taskList.find(({id}) => id === parseFloat(cardid))
@@ -151,7 +130,11 @@ function handleDrop(event, ui) {
 
 // Todo: when the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
 $(document).ready(function () {
-    renderTaskList()
+    if (taskList === null) {
+       
+    } else {
+        renderTaskList()
+    }
     $('.card-lane').on('click', handleDeleteTask)
     $('#inputForm').on('submit', handleAddTask)
     $('#dueDate').datepicker({
