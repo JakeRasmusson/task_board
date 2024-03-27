@@ -43,13 +43,25 @@ function createTaskCard(task) {
     div.id = task.id
     div.classList.add('card', 'draggable')
     div.innerHTML = `
-        <div class='card-content'>
-        <h2 class='card-head'> ${task.title} </h2>
-        <h3 class='card-due'>${task.dueDate}</h3>
-        <p class='card-p'> ${task.text} </p>
-        <button type='button' class='delete-task'>Delete</button>
-        </div>`
+    <div class='card-content'>
+    <h2 class='card-head'> ${task.title} </h2>
+    <h3 class='card-due'>${task.dueDate}</h3>
+    <p class='card-p'> ${task.text} </p>
+    <button type='button' class='delete-task'>Delete</button>
+    </div>`
+    if (task.daysTillDue < 3 && task.daysTillDue > 0 ) {
+        console.log(task.daysTillDue)
+        console.log('eloise')
+        div.classList.add('due-soon')
     return div
+    } else if (task.daysTillDue <= 0) {
+        div.classList.add('over-due')
+    return div
+    } 
+    
+    return div
+
+    
 
 
 }
@@ -82,11 +94,13 @@ function handleAddTask(e){
         alert('Please fill out all fields!')
         return
     }
+    const daysTillDue = handleDate()
     taskList.push(
         {
             title: title,
             text: taskDesc,
             dueDate: dueDate,
+            daysTillDue: daysTillDue,
             id : generateTaskId(),
             laneID: 'todo-cards'}
     )
@@ -95,6 +109,13 @@ function handleAddTask(e){
     // console.log(title, dueDate, taskDesc)
 
         }
+function handleDate(){
+    const dueDate = new Date($('#dueDate').val())
+    const date = new Date();
+    const dateMath = dueDate - date
+    const daysTillDue = Math.ceil(dateMath / (1000 * 60 * 60 * 24));
+    return daysTillDue
+}
 
 
     
@@ -141,12 +162,10 @@ $(document).ready(function () {
     $('#dueDate').datepicker({
         format: 'yyyy-mm-dd'
       });
-
     $('.card-lane').droppable({
         accept: '.draggable',
         drop : function(event, ui) {
             handleDrop(event, ui)
-
         }
     })
 
