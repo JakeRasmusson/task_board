@@ -50,15 +50,10 @@ function createTaskCard(task) {
     <button type='button' class='delete-task'>Delete</button>
     </div>`
     if (task.daysTillDue < 3 && task.daysTillDue > 0 ) {
-        console.log(task.daysTillDue)
-        console.log('eloise')
         div.classList.add('due-soon')
-    return div
     } else if (task.daysTillDue <= 0) {
         div.classList.add('over-due')
-    return div
     } 
-    
     return div
 
     
