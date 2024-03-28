@@ -36,72 +36,70 @@ function createTaskCard(task) {
 
 // Todo: create a function to render the task list and make cards draggable
 function renderTaskList() {
-  cardColumns.forEach((column) => (column.innerHTML = ""));
-  taskList.forEach((task) => {
-    const cardelement = createTaskCard(task);
-    const lane = document.getElementById(task.laneID);
-    // const lane = $('task.laneID')
-    lane?.append(cardelement);
-  });
-  localStorage.setItem("tasks", JSON.stringify(taskList));
-  $(".draggable").draggable({
-    stack: ".card-lane",
-    zIndex: 1,
-  });
+    cardColumns.forEach(column => 
+    column.innerHTML = '' )
+    taskList.forEach(task => {
+        task.daysTillDue = handleDate(task.dueDate)
+        const cardelement = createTaskCard(task)
+        const lane = document.getElementById(task.laneID)
+        lane?.append(cardelement)
+    });
+    localStorage.setItem('tasks', JSON.stringify(taskList))
+    $('.draggable').draggable({
+        zIndex: 1
+    });
+
+
 }
 
 // Todo: create a function to handle adding a new task
-function handleAddTask(e) {
-  e.preventDefault();
-  const title = $("#taskTitle").val();
-  const dueDate = $("#dueDate").val();
-  const taskDesc = $("#taskDesc").val();
-  if (title === "" || dueDate === "" || taskDesc === "") {
-    alert("Please fill out all fields!");
-    return;
-  }
-  const daysTillDue = handleDate(dueDate);
-  taskList.push({
-    title: title,
-    text: taskDesc,
-    dueDate: dueDate,
-    daysTillDue: daysTillDue,
-    id: generateTaskId(),
-    laneID: "todo-cards",
-  });
-  addTaskForm.reset();
-  renderTaskList();
-  // console.log(title, dueDate, taskDesc)
-}
-function handleDate(dueDate) {
-  const dateDue = new Date(dueDate);
-  const date = new Date();
-  const dateMath = dateDue - date;
-  const daysTillDue = Math.ceil(dateMath / (1000 * 60 * 60 * 24));
-  console.log(daysTillDue)
-  return daysTillDue;
+function handleAddTask(e){
+    e.preventDefault()
+    const title = $('#taskTitle').val()
+    const dueDate = $('#dueDate').val()
+    const taskDesc = $('#taskDesc').val()
+    if (title === '' || dueDate === '' || taskDesc === '') {
+        alert('Please fill out all fields!')
+        return
+    }
+    // const daysTillDue = handleDate()
+    taskList.push(
+        {
+            title: title,
+            text: taskDesc,
+            dueDate: dueDate,
+            daysTillDue: 0,
+            id : generateTaskId(),
+            laneID: 'todo-cards'}
+    )
+    addTaskForm.reset()
+    renderTaskList()
+    // console.log(title, dueDate, taskDesc)
+
+        }
+function handleDate(inputDate){
+    const dueDate = new Date(inputDate)
+    const date = new Date();
+    const dateMath = dueDate - date
+    const daysTillDue = Math.ceil(dateMath / (1000 * 60 * 60 * 24));
+    return daysTillDue
 }
 
 // Todo: create a function to handle deleting a task
-function handleDeleteTask(event) {
-  const target = event.target;
-  if (target.className == "delete-task") {
-    parent = target.parentNode;
-    grandParent = parent.parentNode;
-    // grandParent = target.closest(".card-lane")
-    console.log(grandParent)
-    id = grandParent.id;
-    for (let i = 0; i < taskList.length; i++) {
-      if (taskList[i].id == id) {
-        console.log(taskList[i].id);
-        console.log(id);
-        taskList.splice(i, 1);
-        console.log(taskList);
-      }
-    }
-    localStorage.setItem("tasks", JSON.stringify(taskList));
-    grandParent.remove(parent);
-  }
+function handleDeleteTask(event){
+    const target = event.target
+    if (target.className == 'delete-task') {
+        parent = target.parentNode
+        grandParent = parent.parentNode
+        id = grandParent.id
+        for (let i = 0; i < taskList.length; i++) {
+            if (taskList[i].id == id) {
+                taskList.splice(i, 1)
+            }
+        }
+        localStorage.setItem('tasks', JSON.stringify(taskList))
+        grandParent.remove(parent)
+    } 
 }
 
 // Todo: create a function to handle dropping a task into a new status lane
