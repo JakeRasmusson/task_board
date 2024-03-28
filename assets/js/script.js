@@ -44,9 +44,9 @@ function renderTaskList() {
     cardColumns.forEach(column => 
     column.innerHTML = '' )
     taskList.forEach(task => {
+        task.daysTillDue = handleDate(task.dueDate)
         const cardelement = createTaskCard(task)
         const lane = document.getElementById(task.laneID)
-        // const lane = $('task.laneID')
         lane?.append(cardelement)
     });
     localStorage.setItem('tasks', JSON.stringify(taskList))
@@ -67,13 +67,13 @@ function handleAddTask(e){
         alert('Please fill out all fields!')
         return
     }
-    const daysTillDue = handleDate()
+    // const daysTillDue = handleDate()
     taskList.push(
         {
             title: title,
             text: taskDesc,
             dueDate: dueDate,
-            daysTillDue: daysTillDue,
+            daysTillDue: 0,
             id : generateTaskId(),
             laneID: 'todo-cards'}
     )
@@ -82,8 +82,8 @@ function handleAddTask(e){
     // console.log(title, dueDate, taskDesc)
 
         }
-function handleDate(){
-    const dueDate = new Date($('#dueDate').val())
+function handleDate(inputDate){
+    const dueDate = new Date(inputDate)
     const date = new Date();
     const dateMath = dueDate - date
     const daysTillDue = Math.ceil(dateMath / (1000 * 60 * 60 * 24));
@@ -103,10 +103,7 @@ function handleDeleteTask(event){
         id = grandParent.id
         for (let i = 0; i < taskList.length; i++) {
             if (taskList[i].id == id) {
-                console.log(taskList[i].id)
-                console.log(id)
                 taskList.splice(i, 1)
-                console.log(taskList)
             }
         }
         localStorage.setItem('tasks', JSON.stringify(taskList))
