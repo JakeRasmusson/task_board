@@ -11,17 +11,27 @@ function generateTaskId() {
 
 // Todo: create a function to create a task card
 function createTaskCard(task) {
-  let late = "Due in future";
+  //Create card div
   const div = document.createElement("div");
-  if (task.daysTillDue < 3 && task.daysTillDue > 0) {
+  //Set default late var
+  let late = "Due in future";
+  //Check due date and add class accordingly
+  if (task.daysTillDue < 3 && task.daysTillDue > 0 && task.laneID !== 'done-cards') {
     div.classList.add("due-soon");
     late = "Due soon";
-  } else if (task.daysTillDue <= 0) {
+  } else if (task.daysTillDue <= 0 && task.laneID !== 'done-cards') {
     div.classList.add("over-due");
     late = "Past due";
   }
+  //If laneid done-cards set late var and keep white regardless of due date
+  if (task.laneID == 'done-cards') {
+  late = 'Done'
+  }
+  //Set div id to the objects id
   div.id = task.id;
+  //Add class elements
   div.classList.add("card", "draggable");
+  //set card html
   div.innerHTML = `
     <div class='card-content'>
     <h2 class='card-head'> ${task.title} </h2>
@@ -30,7 +40,6 @@ function createTaskCard(task) {
     <p class='card-p'> ${task.text} </p>
     <button type='button' class='delete-task'>Delete</button>
     </div>`;
-
   return div;
 }
 
@@ -44,7 +53,8 @@ function renderTaskList() {
         const lane = document.getElementById(task.laneID)
         lane?.append(cardelement)
     });
-    localStorage.setItem('tasks', JSON.stringify(taskList))
+    saveTasksToStorage()
+    // localStorage.setItem('tasks', JSON.stringify(taskList))
     $('.draggable').draggable({
         zIndex: 1
     });
@@ -85,6 +95,9 @@ function handleDate(inputDate){
     return daysTillDue
 }
 
+function saveTasksToStorage(){
+  localStorage.setItem('tasks', JSON.stringify(taskList))
+}
 // Todo: create a function to handle deleting a task
 function handleDeleteTask(event){
     const target = event.target
@@ -97,7 +110,8 @@ function handleDeleteTask(event){
                 taskList.splice(i, 1)
             }
         }
-        localStorage.setItem('tasks', JSON.stringify(taskList))
+        saveTasksToStorage()
+        // localStorage.setItem('tasks', JSON.stringify(taskList))
         grandParent.remove(parent)
     } 
 }

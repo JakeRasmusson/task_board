@@ -3,7 +3,11 @@ body {
   font-size: 16px;
 }
 
-.swim-lanes .card-lane {
+.card-lane {
+  height: 100%;
+}
+
+.swim-lanes  {
   min-height: 60vh;
 }
 
