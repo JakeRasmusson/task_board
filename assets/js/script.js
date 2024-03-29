@@ -13,6 +13,10 @@ function generateTaskId() {
 function createTaskCard(task) {
   //Create card div
   const div = document.createElement("div");
+   //Set div id to the objects id
+   div.id = task.id;
+   //Add class elements
+   div.classList.add("card", "draggable");
   //Set default late var
   let late = "Due in future";
   //Check due date and add class accordingly
@@ -27,10 +31,7 @@ function createTaskCard(task) {
   if (task.laneID == 'done-cards') {
   late = 'Done'
   }
-  //Set div id to the objects id
-  div.id = task.id;
-  //Add class elements
-  div.classList.add("card", "draggable");
+ 
   //set card html
   div.innerHTML = `
     <div class='card-content'>
