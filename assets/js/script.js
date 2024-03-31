@@ -13,6 +13,8 @@ function generateTaskId() {
 function createTaskCard(task) {
   //Create card div
   const div = document.createElement("div");
+  const now = dayjs();
+  const dueDate = dayjs(task.dueDate, 'DD/MM/YYYY')
    //Set div id to the objects id
    div.id = task.id;
    //Add class elements
@@ -20,10 +22,10 @@ function createTaskCard(task) {
   //Set default late var
   let late = "Due in future";
   //Check due date and add class accordingly
-  if (task.daysTillDue < 3 && task.daysTillDue > 0 && task.laneID !== 'done-cards') {
+  if (now.isSame(dueDate, 'day') && task.laneID !== 'done-cards') {
     div.classList.add("due-soon");
     late = "Due soon";
-  } else if (task.daysTillDue <= 0 && task.laneID !== 'done-cards') {
+  } else if (now.isAfter(dueDate, 'day') && task.laneID !== 'done-cards') {
     div.classList.add("over-due");
     late = "Past due";
   }
@@ -49,7 +51,7 @@ function renderTaskList() {
     cardColumns.forEach(column => 
     column.innerHTML = '' )
     taskList.forEach(task => {
-        task.daysTillDue = handleDate(task.dueDate)
+        // task.daysTillDue = handleDate(task.dueDate)
         const cardelement = createTaskCard(task)
         const lane = document.getElementById(task.laneID)
         lane?.append(cardelement)
@@ -88,13 +90,13 @@ function handleAddTask(e){
     // console.log(title, dueDate, taskDesc)
 
         }
-function handleDate(inputDate){
-    const dueDate = new Date(inputDate)
-    const date = new Date();
-    const dateMath = dueDate - date
-    const daysTillDue = Math.ceil(dateMath / (1000 * 60 * 60 * 24));
-    return daysTillDue
-}
+// function handleDate(inputDate){
+//     const dueDate = new Date(inputDate)
+//     const date = new Date();
+//     const dateMath = dueDate - date
+//     const daysTillDue = Math.ceil(dateMath / (1000 * 60 * 60 * 24));
+//     return daysTillDue
+// }
 
 function saveTasksToStorage(){
   localStorage.setItem('tasks', JSON.stringify(taskList))
