@@ -19,11 +19,11 @@ body {
   cursor: grab;
 }
 
-
+/* Class applied to cards due today */
 .due-soon {
   background-color: yellow;
 }
-
+/* Class applied ot cards overdue */
 .over-due {
   background-color: red;
 }

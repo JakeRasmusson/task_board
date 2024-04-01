@@ -6,6 +6,7 @@ let addTaskForm = document.getElementById("inputForm");
 
 // Todo: create a function to generate a unique task id
 function generateTaskId() {
+    //Give each card a random ID
   return Math.random();
 }
 
@@ -75,29 +76,20 @@ function handleAddTask(e){
         alert('Please fill out all fields!')
         return
     }
-    // const daysTillDue = handleDate()
     taskList.push(
         {
             title: title,
             text: taskDesc,
             dueDate: dueDate,
-            daysTillDue: 0,
             id : generateTaskId(),
             laneID: 'todo-cards'}
     )
+    //Reset form fields
     addTaskForm.reset()
+    //Renders all cards
     renderTaskList()
-    // console.log(title, dueDate, taskDesc)
-
         }
-// function handleDate(inputDate){
-//     const dueDate = new Date(inputDate)
-//     const date = new Date();
-//     const dateMath = dueDate - date
-//     const daysTillDue = Math.ceil(dateMath / (1000 * 60 * 60 * 24));
-//     return daysTillDue
-// }
-
+    //Helper function to save tasks to local storage
 function saveTasksToStorage(){
   localStorage.setItem('tasks', JSON.stringify(taskList))
 }
@@ -114,19 +106,16 @@ function handleDeleteTask(event){
             }
         }
         saveTasksToStorage()
-        // localStorage.setItem('tasks', JSON.stringify(taskList))
         grandParent.remove(parent)
     } 
 }
 
 // Todo: create a function to handle dropping a task into a new status lane
 function handleDrop(event, ui) {
-  console.log(ui);
+    //Takes the event and ui from a drop event and moves the card to the correct row
   const cardEL = ui.draggable[0];
   const cardid = cardEL.id;
-  console.log(event);
   const nextCol = event.target.id;
-  console.log(nextCol);
   const data = taskList.find(({ id }) => id === parseFloat(cardid));
   data.laneID = nextCol;
   renderTaskList();
@@ -138,11 +127,15 @@ $(document).ready(function () {
   } else {
     renderTaskList();
   }
+  //event delegation for deleting task cards
   $(".card-lane").on("click", handleDeleteTask);
+  //event listener for form submission
   $("#inputForm").on("submit", handleAddTask);
+  //Datepicker for form
   $("#dueDate").datepicker({
     format: "yyyy-mm-dd",
   });
+  //Droppable listener for drag and drop function
   $(".card-lane").droppable({
     accept: ".draggable",
     drop: function (event, ui) {
