@@ -4,7 +4,7 @@
 
 The goal of this project was to create a Kanban taskboard for organizing upcoming projects.  The end product should be able to create new tasks, move them, and delete them.  All with the ability to leave and refresh the page and still have the board displaying the same as when you left. 
 
-[Link to deployed Github website]()
+[Link to deployed Github website](https://jakerasmusson.github.io/task_board/)
 
 ## Built With
 
